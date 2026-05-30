@@ -49,19 +49,19 @@ fn read_files(opt: &Opt) -> Result<()> {
                 Event::Start(ref e) => {
                     match e.name() {
                         b"labels" => {
-                            db::init(&opt.dbopts, "sql/tables/label.sql")?;
+                            db::init(&opt.dbopts, "tables/label.sql")?;
                             break Box::new(label::LabelsParser::new(&opt.dbopts));
                         }
                         b"releases" => {
-                            db::init(&opt.dbopts, "sql/tables/release.sql")?;
+                            db::init(&opt.dbopts, "tables/release.sql")?;
                             break Box::new(release::ReleasesParser::new(&opt.dbopts));
                         }
                         b"artists" => {
-                            db::init(&opt.dbopts, "sql/tables/artist.sql")?;
+                            db::init(&opt.dbopts, "tables/artist.sql")?;
                             break Box::new(artist::ArtistsParser::new(&opt.dbopts));
                         }
                         b"masters" => {
-                            db::init(&opt.dbopts, "sql/tables/master.sql")?;
+                            db::init(&opt.dbopts, "tables/master.sql")?;
                             break Box::new(master::MastersParser::new(&opt.dbopts));
                         }
                         _ => (),
@@ -93,7 +93,7 @@ fn read_files(opt: &Opt) -> Result<()> {
     }
 
     if opt.dbopts.create_indexes {
-        db::indexes(&opt.dbopts, "sql/indexes_safe.sql")?;
+        db::indexes(&opt.dbopts, "indexes_safe.sql")?;
     }
 
     Ok(())

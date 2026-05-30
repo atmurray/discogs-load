@@ -30,6 +30,9 @@ pub struct DbOpt {
     /// Database name
     #[structopt(long = "db-name", default_value = "discogs")]
     pub db_name: String,
+    /// Schema path
+    #[structopt(long = "schema-path", default_value = "sql")]
+    pub schema_path: String,
 }
 
 pub trait SqlSerialization {
@@ -37,18 +40,18 @@ pub trait SqlSerialization {
 }
 
 /// Initialize schema and close connection.
-pub fn init(db_opts: &DbOpt, schema_path: &str) -> Result<()> {
+pub fn init(db_opts: &DbOpt, file_name: &str) -> Result<()> {
     info!("Creating the tables.");
     let db = Db::connect(db_opts);
-    Db::execute_file(&mut db?, schema_path)?;
+    Db::execute_file(&mut db?, &format!("{}/{}", db_opts.schema_path, file_name))?;
     Ok(())
 }
 
 /// Initialize indexes and close connection.
-pub fn indexes(opts: &DbOpt, file_path: &str) -> Result<()> {
+pub fn indexes(db_opts: &DbOpt, file_name: &str) -> Result<()> {
     info!("Creating the indexes.");
-    let db = Db::connect(opts);
-    Db::execute_file(&mut db?, file_path)?;
+    let db = Db::connect(db_opts);
+    Db::execute_file(&mut db?, &format!("{}/{}", db_opts.schema_path, file_name))?;
     Ok(())
 }
 
